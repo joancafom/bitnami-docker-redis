@@ -72,7 +72,7 @@ $ docker build -t bitnami/redis:latest 'https://github.com/bitnami/bitnami-docke
 
 # Persisting your database
 
-Redis provides a different range of [persistence options](https://redis.io/topics/persistence). This contanier uses *AOF persistence by default* but it is easy to overwrite that configuration in a `docker-compose.yaml` file with this entry `command: /opt/bitnami/scripts/redis/run.sh --appendonly no`.
+Redis provides a different range of [persistence options](https://redis.io/topics/persistence). This contanier uses *AOF persistence by default* but it is easy to overwrite that configuration in a `docker-compose.yaml` file with this entry `command: /opt/bitnami/scripts/redis/run.sh --appendonly no`. Alternatively, you may use the `USE_AOF` env variable as explained in [Disabling AOF persistence](https://github.com/joancafom/bitnami-docker-redis#disabling-aof-persistence).
 
 If you remove the container all your data will be lost, and the next time you run the image the database will be reinitialized. To avoid this loss of data, you should mount a volume that will persist even after the container is removed.
 
@@ -267,6 +267,25 @@ services:
   ...
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+  ...
+```
+
+## Disabling AOF persistence
+
+Redis offers different [options](https://redis.io/topics/persistence) when it comes to persistence. By default, this image is set up to use the AOF (Append Only File) approach. Should you need to change this behaviour, setting the `USE_AOF=no` env variable will disable this feature.
+
+```console
+$ docker run --name redis -e USE_AOF=no bitnami/redis:latest
+```
+
+Alternatively, modify the [`docker-compose.yml`](https://github.com/bitnami/bitnami-docker-redis/blob/master/docker-compose.yml) file present in this repository:
+
+```yaml
+services:
+  redis:
+  ...
+    environment:
+      - USE_AOF=no
   ...
 ```
 
